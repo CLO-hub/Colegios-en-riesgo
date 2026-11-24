@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colegios en riesgo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* Mismo sistema de Luz Justa: franja oscura con el logo en bloque blanco, línea fucsia, Public Sans.
+   Diseño: franja, texto de entrada a todo el ancho, cifras, y tablero de mapa + ficha + lista. */
+:root{
+  color-scheme:light;
+  --franja:#1B1F2A; --titulo:#0F172A; --texto:#1F2937; --suave:#4B5563; --borde:#E5E7EB; --fondo-suave:#F8FAFC;
+  --fucsia:#E6007E; --fucsia-osc:#C4006B; --fucsia-claro:#FDE7F2; --verde:#9CCC3A; --verde-osc:#4E7A12; --verde-claro:#F1F8E3; --mapa:#EEF1EA;
+  --e0:#9B0F1E; --e1:#E2571A; --e2:#F0B000; --e3:#7C8794; --e4:#C3C9D0;
+  --fuente:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; --radio:10px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0}
+body{background:#fff;color:var(--texto);font-family:var(--fuente);font-size:16px;line-height:1.5}
+a{color:var(--fucsia-osc)}
+:focus-visible{outline:3px solid var(--verde);outline-offset:2px}
+.int{max-width:1240px;margin:0 auto;padding:0 16px}
+.franja{background:var(--franja);color:#fff}
+.franja .int{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px}
+.marca{display:flex;align-items:center;gap:14px;min-width:0}
+.bloque-logo{background:#fff;border-radius:12px;width:92px;height:92px;flex:0 0 92px;display:grid;place-items:center;overflow:hidden}
+.bloque-logo img{width:82px;height:auto;display:block}
+.marca .nombre{font-weight:900;font-size:1.35rem;line-height:1.15;margin:0;letter-spacing:-.01em}
+.marca .meta{font-size:.8rem;color:#CBD5E1;margin:3px 0 0;line-height:1.35}
+.oficina{text-align:right;flex:0 0 auto}
+.oficina .l1{font-size:.7rem;color:#9CA3AF;margin:0}
+.oficina .l2{font-weight:600;font-size:.8rem;color:#E5E7EB;margin:1px 0 0}
+.oficina .l3{font-size:.7rem;color:#9CA3AF;margin:1px 0 0}
+.linea{height:5px;background:var(--fucsia)}
+.interpela{background:#0E1118;color:#fff;border-bottom:5px solid var(--fucsia)}
+.interpela .int{padding-top:18px;padding-bottom:18px}
+.interpela .et{display:inline-block;background:var(--fucsia);color:#fff;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin:0 0 10px}
+.interpela .a{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.interpela .a span{border:1px solid #4B5563;border-radius:6px;padding:6px 10px;font-size:.85rem;line-height:1.25}
+.interpela .a b{display:block;font-size:.95rem}
+.interpela .q{font-size:clamp(1.35rem,4vw,2.1rem);font-weight:900;line-height:1.12;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.interpela .q em{font-style:normal;color:var(--verde)}
+.interpela .s{margin:10px 0 0;font-size:.95rem;color:#D1D5DB;max-width:70ch}
+.interpela .s b{color:#fff}
+.entrada{padding:18px 0 4px}
+.entrada h1{font-size:clamp(1.5rem,4.2vw,2.3rem);line-height:1.12;font-weight:900;color:var(--titulo);margin:0 0 8px;letter-spacing:-.02em;text-wrap:balance}
+.entrada h1 span{color:var(--fucsia)}
+.entrada p{margin:0 0 8px;font-size:1.05rem}
+.entrada .exige{font-weight:700;color:var(--titulo);border-left:5px solid var(--verde);padding:6px 0 6px 12px;background:var(--verde-claro)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 18px}
+.tile{border:1px solid var(--borde);border-left:6px solid var(--fucsia);border-radius:var(--radio);padding:12px 14px;background:var(--fondo-suave);min-width:0}
+.tile b{display:block;font-weight:900;font-size:1.9rem;line-height:1.1;color:var(--titulo);font-variant-numeric:tabular-nums}
+.tile span{font-size:.82rem;color:var(--suave)}
+.tile.v{border-left-color:var(--verde)}
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.ctrl label{display:flex;flex-direction:column;font-size:.75rem;font-weight:700;gap:4px;color:var(--suave);text-transform:uppercase;letter-spacing:.04em;flex:1 1 200px;min-width:0}
+select,input[type=text],input[type=email],textarea{font:inherit;font-size:16px;padding:10px;border:1px solid #9CA3AF;border-radius:8px;background:#fff;color:var(--texto);min-width:0;width:100%;min-height:44px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid #9CA3AF;border-radius:999px;padding:8px 13px;font:600 .82rem var(--fuente);background:#fff;color:var(--texto);cursor:pointer;min-height:40px}
+.chip i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.chip[aria-pressed="false"]{opacity:.5;text-decoration:line-through}
+.board{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.mapbox{position:relative;min-width:0}
+#map{height:620px;background:var(--mapa);border:1px solid var(--borde);border-radius:var(--radio);overflow:hidden}
+.leaflet-container{font-family:var(--fuente)}
+.dlab{font:700 10px var(--fuente);color:#7C8177;text-align:center;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;pointer-events:none}
+.sat .dlab{color:#fff;text-shadow:0 0 3px #000,0 0 3px #000}
+.capas{position:absolute;top:10px;right:10px;z-index:500;display:flex;border:1px solid #9CA3AF;border-radius:8px;overflow:hidden;background:#fff}
+.capas button{border:0;background:#fff;font:700 .8rem var(--fuente);padding:9px 12px;cursor:pointer;color:var(--texto);min-height:40px}
+.capas button[aria-pressed="true"]{background:var(--franja);color:#fff}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{border:1px solid var(--borde);border-radius:var(--radio);padding:16px;min-width:0}
+.card h2{font-size:1.3rem;font-weight:900;color:var(--titulo);line-height:1.15;margin:0 0 8px;overflow-wrap:anywhere}
+.pill{display:inline-block;color:#fff;font-weight:700;font-size:.72rem;padding:4px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:.03em}
+.pill.d{color:var(--titulo)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:12px 0;font-size:.9rem}
+dt{color:var(--suave)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.foto{margin:10px 0 0;border:1px solid var(--borde);border-radius:8px;overflow:hidden;background:var(--fondo-suave)}
+.foto img{display:block;width:100%;height:auto}
+.foto figcaption{font-size:.75rem;color:var(--suave);padding:6px 10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:2px solid var(--fucsia);border-radius:8px;background:var(--fucsia);color:#fff;font:700 .95rem var(--fuente);padding:10px 16px;cursor:pointer;text-decoration:none;text-align:center}
+.btn:hover{background:var(--fucsia-osc);border-color:var(--fucsia-osc)}
+.btn.sec{background:#fff;color:var(--fucsia-osc)}
+.btn.sec:hover{background:var(--fucsia-claro)}
+.btn.gr{background:#fff;color:var(--texto);border-color:#9CA3AF;font-weight:600;font-size:.85rem}
+.btn.grande{width:100%;font-size:1.05rem;min-height:52px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.list{max-height:440px;overflow:auto;border:1px solid var(--borde);border-radius:var(--radio)}
+.row{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--borde);background:#fff;padding:10px 12px;font:inherit;color:inherit;cursor:pointer;min-height:56px}
+.row:hover,.row[aria-current="true"]{background:var(--fondo-suave)}
+.row i{width:10px;height:36px;display:block;border-radius:3px}
+.row b{display:block;font-size:.9rem;overflow-wrap:anywhere;color:var(--titulo)}
+.row small{color:var(--suave)}
+.row em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;font-size:.9rem}
+.more{width:100%;padding:12px;border:0;background:var(--fondo-suave);font:700 .9rem var(--fuente);cursor:pointer;color:var(--texto);min-height:44px}
+.cnt{font-size:.9rem;margin:0 0 8px}
+.pasos{margin:0 0 10px;padding-left:20px;font-size:.92rem}
+form.pet{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+form.pet label{display:flex;flex-direction:column;gap:4px;font-size:.82rem;font-weight:700;color:var(--titulo);min-width:0}
+form.pet .full{grid-column:1/-1}
+form.pet small{font-weight:400;color:var(--suave)}
+.mal{border-color:#B91C1C!important;background:#FEF2F2}
+textarea{min-height:240px;font-size:.85rem;line-height:1.45}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:700;font-size:.9rem;min-height:36px}
+.prev{margin-top:12px;border:1px solid var(--borde);border-radius:8px;padding:12px;background:var(--fondo-suave)}.prev h3{margin:0 0 6px;font-size:1rem}.prev .cab{font-size:.85rem;margin:0 0 8px;overflow-wrap:anywhere}
+.aviso-sat{position:absolute;top:58px;right:10px;left:10px;z-index:500;background:#fff;border:1px solid #9CA3AF;border-radius:8px;padding:10px;font-size:.85rem;font-weight:600}
+.foto iframe{display:block;width:100%;height:220px;border:0}
+.note{font-size:.82rem;color:var(--suave);margin:8px 0 0}
+.err{font-weight:700;color:#B91C1C;font-size:.9rem;margin:8px 0 0}
+.ok{font-weight:700;color:var(--verde-osc);font-size:.92rem;margin:8px 0 0;background:var(--verde-claro);border-radius:8px;padding:10px}
+.ok:empty,.err:empty{display:none}
+section.info{margin:30px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+section.info h3{font-size:1.05rem;font-weight:900;color:var(--titulo);margin:0 0 6px;border-bottom:4px solid var(--verde);padding-bottom:4px}
+section.info p,section.info li{font-size:.9rem}
+section.info ul{padding-left:18px;margin:6px 0}
+.pie{background:var(--franja);color:#CBD5E1;padding:16px 0 26px;font-size:.82rem;margin-top:10px}
+.pie b{color:#fff}
+@media (max-width:900px){.board{grid-template-columns:1fr}#map{height:380px}.tiles{grid-template-columns:repeat(2,1fr)}section.info{grid-template-columns:1fr}}
+@media (max-width:640px){.franja .int{flex-wrap:wrap;gap:8px}.oficina{text-align:left;width:100%}.oficina p{display:inline}.bloque-logo{width:72px;height:72px;flex-basis:72px}.bloque-logo img{width:64px}.marca .nombre{font-size:1.15rem}.tile b{font-size:1.55rem}form.pet{grid-template-columns:1fr}.acts .btn{flex:1 1 100%}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+/* required styles */
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+/* Prevents IE11 from highlighting tiles in blue */
+.leaflet-tile::selection {
+	background: transparent;
+}
+/* Safari renders non-retina tile on retina better with this, but Chrome is worse */
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+/* hack that prevents hw layers "stretching" when loading new tiles */
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+/* .leaflet-container svg: reset svg max-width decleration shipped in Joomla! (joomla.org) 3.x */
+/* .leaflet-container img: map is broken in FF if you have max-width: 100% on tiles */
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	/* See: https://bugs.chromium.org/p/chromium/issues/detail?id=600120 */
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	/* Fallback for FF which doesn't support pinch-zoom */
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+/* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	behavior: url(#default#VML);
+	display: inline-block;
+	position: absolute;
+	}
+
+
+/* control positioning */
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+/* zoom and fade animations */
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+/* cursors */
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+/* marker & overlays interactivity */
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
+	pointer-events: auto;
+	}
+
+/* visual tweaks */
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+/* general typography */
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+/* general toolbar styles */
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+/* zoom control */
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+/* layers control */
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	background-image: none;
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-image: none;
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+/* Default icon URLs */
+.leaflet-default-icon-path { /* used only in path-guessing heuristic, see L.Icon.Default */
+	background-image: none;
+	}
+
+
+/* attribution and scale controls */
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+/* popup */
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+/* div icon */
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+/* Tooltip */
+/* Base styles for the element that has a tooltip */
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+/* Printing */
+
+@media print {
+	/* Prevent printers from removing background-images of controls. */
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+
+
+.puerta{position:fixed;inset:0;z-index:3000;background:rgba(27,31,42,.82);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px}
+.puerta .caja{background:#fff;border-radius:14px;max-width:640px;width:100%;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.puerta .cab{background:var(--franja);color:#fff;padding:16px 20px;border-bottom:5px solid var(--fucsia);display:flex;gap:12px;align-items:center}
+.puerta .cab h2{margin:0;font-size:1.3rem;line-height:1.2;color:#fff}.puerta .cab p{margin:2px 0 0;font-size:.82rem;opacity:.85}
+.puerta .cu{padding:16px 20px 20px}
+.puerta h3{margin:14px 0 6px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--fucsia)}
+.puerta h3:first-child{margin-top:0}
+.puerta p{margin:0;font-size:.95rem;line-height:1.45}
+.pnum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pnum div{background:var(--fondo-suave);border-left:5px solid var(--fucsia);border-radius:8px;padding:10px 12px}
+.pnum b{display:block;font-size:1.9rem;line-height:1.05;font-weight:800}.pnum span{font-size:.82rem;color:var(--suave)}
+.pdos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pdos div{border:1px solid var(--borde);border-radius:8px;padding:10px 12px;font-size:.9rem;line-height:1.35}
+.pdos i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--fucsia);color:#fff;font-weight:800;margin-bottom:6px}
+.pdat{background:var(--verde-claro);border-left:5px solid var(--verde);border-radius:8px;padding:10px 12px}
+.pdat b.g{display:block;font-size:1.05rem;margin-bottom:4px}
+.pdat ul{margin:0;padding-left:18px;font-size:.86rem;line-height:1.4}
+.puerta details{margin-top:8px;font-size:.8rem;color:var(--suave)}.puerta details p{font-size:.8rem;margin-top:6px}
+.pacep{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:.92rem;font-weight:600;cursor:pointer}
+.pacep input{width:24px;height:24px;flex:0 0 24px;margin:0;accent-color:var(--fucsia)}
+.puerta .btn[disabled]{opacity:.45;cursor:not-allowed}
+@media (max-width:520px){.pnum b{font-size:1.5rem}.pdos{grid-template-columns:1fr}.puerta{padding:8px}}
+</style>
+</head>
+<body>
+<div class="puerta" id="puerta" role="dialog" aria-modal="true" aria-labelledby="pth">
+  <div class="caja">
+    <div class="cab"><div class="bloque-logo" id="plogo"></div><div><h2 id="pth">Colegios en riesgo</h2><p>Control político de la senadora Laura Ahumada</p></div></div>
+    <div class="cu">
+      <h3>Por qué creamos esta herramienta</h3>
+      <p>Pasaron <b id="pdias"></b> días desde el terremoto del 10 de agosto de 2026 y el Gobierno no ha publicado la lista de colegios afectados, ni el cronograma de obras, ni los recursos de cada uno. La obtuvimos haciendo control político y aquí la publicamos.</p>
+      <h3>Qué está en riesgo</h3>
+      <div class="pnum"><div><b>1.073</b><span>colegios caídos o en riesgo inminente de colapso</span></div><div><b>201.833</b><span>niños, niñas y adolescentes matriculados en ellos</span></div></div>
+      <h3>Qué puede hacer aquí</h3>
+      <div class="pdos"><div><i>1</i><b>Buscar su colegio</b><br>Vea en el mapa qué riesgo de colapso le asignó el Ministerio de Educación tras el terremoto.</div><div><i>2</i><b>Pedir cuentas</b><br>Arme en un minuto su derecho de petición y envíelo desde su propio correo.</div></div>
+      <h3>Sus datos</h3>
+      <div class="pdat"><b class="g">Esta página no guarda sus datos.</b>
+        <ul><li>Lo que escriba se queda en su teléfono o computador y solo sirve para armar su correo.</li>
+        <li>El correo lo envía usted, desde su cuenta, al Ministerio de Educación, con copia a la senadora.</li>
+        <li>Esa copia se usa únicamente para hacer seguimiento a la respuesta del Ministerio.</li></ul>
+      </div>
+      <details><summary>Leer la autorización y las condiciones completas</summary>
+        <p><b>Tratamiento de datos.</b> Esta herramienta no recolecta, almacena ni transmite a servidores propios ni de terceros los datos que usted escriba (nombre, cédula, correo, municipio). El mensaje se arma en su dispositivo y usted decide si lo envía. Al enviarlo con copia a laura.ahumada@senado.gov.co, y de conformidad con el artículo 15 de la Constitución y la Ley 1581 de 2012, usted autoriza de manera libre, previa, expresa e informada a Laura Cristina Ahumada García, Senadora de la República, a conocer y conservar esa copia con la única finalidad de hacer seguimiento y control político a la respuesta del Ministerio de Educación. Puede borrar la copia antes de enviar su correo. Puede ejercer sus derechos de acceso, actualización, rectificación, supresión y revocatoria escribiendo a ese mismo correo.</p>
+        <p><b>Responsabilidad.</b> La solicitud se presenta a nombre suyo y bajo su responsabilidad; su envío, contenido y seguimiento dependen de usted. El uso de esta herramienta no constituye poder ni mandato, asesoría jurídica, afiliación partidista ni obligación de respaldo electoral.</p>
+        <p><b>Fuente.</b> El listado, el estado y las coordenadas de cada sede provienen del anexo 1 del oficio 2026-EE-407012 del Ministerio de Educación Nacional (29 de octubre de 2026, corte 28 de septiembre). La situación de una sede puede haber cambiado. Esta página no es un concepto técnico sobre la seguridad de ninguna edificación.</p>
+      </details>
+      <label class="pacep" for="pchk"><input type="checkbox" id="pchk"><span>Leí y acepto. Entiendo que esta página no guarda mis datos y que, si envío una solicitud, lo hago desde mi correo y con copia a la senadora.</span></label>
+      <div class="acts"><button type="button" class="btn grande" id="pentrar" disabled>Entrar al mapa</button></div>
+      <p class="note" style="text-align:center;margin-top:12px">Elaboró: <b>Cristian López</b> · Asesor UTL Senadora Laura Ahumada</p>
+    </div>
+  </div>
+</div>
+<header class="franja" id="cabeza"><div class="int">
+  <div class="marca">
+    <div class="bloque-logo"><img src="data:image/webp;base64,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" width="56" height="57" alt="Logo Senadora Laura Ahumada"></div>
+    <div>
+      <p class="nombre">Colegios en riesgo</p>
+      <p class="meta">Sedes educativas afectadas por el terremoto del 10 de agosto de 2026 · Control político</p>
+    </div>
+  </div>
+  <div class="oficina">
+    <p class="l1">Elaboró</p>
+    <p class="l2">Cristian López</p>
+    <p class="l3">Asesor UTL Senadora Laura Ahumada</p>
+  </div>
+</div></header>
+<div class="linea" role="presentation"></div>
+
+<section class="interpela" id="interpela" aria-label="Pregunta al Gobierno"><div class="int">
+  <p class="et">Le exigimos respuesta al Gobierno</p>
+  <p class="a"><span><b>Abelardo de la Espriella</b>Presidente de la República</span><span><b>Ilva Myriam Hoyos</b>Ministra de Educación</span></p>
+  <p class="q">Señor Presidente, señora Ministra: <em>¿qué pasa con los colegios de nuestros hijos e hijas?</em></p>
+  <p class="s">Van <b><span id="idias"></span> días</b> desde el terremoto. No han publicado la lista de colegios afectados, ni el cronograma de obra de cada uno, ni los recursos asignados a cada institución.</p>
+</div></section>
+<main class="int">
+  <div class="entrada">
+    <h1>¿El colegio de sus hijos quedó <span>en riesgo</span> por el terremoto?</h1>
+    <p>El Ministerio de Educación reconoce 5.738 sedes educativas afectadas por el terremoto del 10 de agosto de 2026. Busque la suya, mire en qué estado la clasificó el Ministerio y pídale cuentas.</p>
+    <p class="exige">Exigimos al Ministerio de Educación que publique la lista, el cronograma de obra de cada colegio y los recursos asignados a cada institución.</p>
+  </div>
+
+  <div class="tiles" id="tiles">
+    <div class="tile"><b id="t1">1.073</b><span>sedes en colapso total, colapso parcial o riesgo inminente de colapso</span></div>
+    <div class="tile"><b id="t2">201.833</b><span>estudiantes matriculados en esas sedes</span></div>
+    <div class="tile"><b id="t3">5.738</b><span id="t3s">sedes afectadas en 22 departamentos</span></div>
+    <div class="tile v"><b>225</b><span>sedes con recursos anunciados por el Ministerio en noviembre de 2026. No ha publicado cuáles son ni sus fechas de obra</span></div>
+  </div>
+
+  <div class="ctrl">
+    <label for="fdep">Departamento<select id="fdep"><option value="">Todos</option></select></label>
+    <label for="fmun">Municipio<select id="fmun"><option value="">Todos</option></select></label>
+    <label for="fq">Nombre del colegio o sede<input type="text" id="fq" placeholder="Escriba parte del nombre" autocomplete="off"></label>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Estado de la sede"></div>
+
+  <div class="board">
+    <div class="mapbox">
+      <div class="capas" id="capas" role="group" aria-label="Tipo de mapa">
+        <button type="button" id="cmapa" aria-pressed="true">Mapa</button><button type="button" id="csat" aria-pressed="false">Satélite</button>
+      </div>
+      <p class="aviso-sat" id="avsat" hidden>La imagen satelital no carga dentro de Claude. Funciona en la versión publicada en la web.</p>
+      <div id="map" aria-label="Mapa de sedes educativas afectadas"></div>
+    </div>
+    <div class="side">
+      <div class="card" id="detail"></div>
+      <div class="card" id="petbox" hidden>
+        <h2>Envíe su solicitud al Ministerio</h2>
+        <ol class="pasos"><li>Llene sus datos.</li><li>Revise aquí mismo cómo queda su correo.</li><li>Oprima «Enviar mi solicitud»: se abre su correo con ese mensaje, dirigido al Ministerio y con copia a la senadora.</li><li>En su correo, oprima Enviar. Ahí queda radicada a su nombre.</li></ol>
+        <form class="pet" id="pet" novalidate>
+          <label class="full" for="pn">Nombres y apellidos<input type="text" id="pn" autocomplete="name" placeholder="Ej.: Carlos Martínez Rojas"></label>
+          <label for="pc">Número de cédula <small>Solo números.</small><input type="text" id="pc" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="off" placeholder="Ej.: 1098765432"></label>
+          <label class="full" for="pe">Su correo electrónico <small>Desde este correo sale la solicitud y a él debe responderle el Ministerio.</small><input type="email" id="pe" autocomplete="email" inputmode="email" placeholder="nombre@correo.com"></label>
+          <label for="pm">Municipio donde vive<input type="text" id="pm" autocomplete="address-level2"></label>
+          <label for="pr">Su relación con el colegio
+            <select id="pr"><option>madre o padre de familia</option><option>acudiente</option><option>estudiante</option><option>docente o directivo</option><option>egresado(a)</option><option>vecino(a) de la sede</option><option>ciudadano(a) interesado(a)</option></select></label>
+        </form>
+        <div class="prev">
+          <h3>Así queda su correo</h3>
+          <p class="cab"><b>Para:</b> <span id="pto"></span><br><b>Con copia a:</b> <span id="pcc"></span><br><b>Asunto:</b> <span id="pas"></span></p>
+          <label for="ptxt" class="note" style="display:block;margin:0 0 4px">Mensaje (se completa con sus datos; puede corregirlo aquí)</label>
+          <textarea id="ptxt" spellcheck="false"></textarea>
+        </div>
+        <p class="err" id="perr" role="alert"></p>
+        <div class="acts"><a class="btn grande" id="benviar" href="#" rel="noopener">Enviar mi solicitud</a></div>
+        <p class="ok" id="pok" role="status"></p>
+        <p class="note">Esta página no guarda sus datos ni envía el correo por usted: lo envía usted desde su cuenta. El Ministerio tiene 15 días hábiles para responder (Ley 1755 de 2015). Guarde el correo enviado: es su constancia.</p>
+        <details>
+          <summary>¿No se abrió su correo o llegó sin texto? Envíelo de otra forma</summary>
+          <div class="acts">
+            <a class="btn gr" id="bgmail" target="_blank" rel="noopener">Abrir en Gmail</a>
+            <a class="btn gr" id="bout" target="_blank" rel="noopener">Abrir en Outlook o Hotmail</a>
+            <a class="btn gr" id="byah" target="_blank" rel="noopener">Abrir en Yahoo</a>
+            <a class="btn gr" id="bmail">Abrir en la app de correo</a>
+            <button class="btn gr" id="bcopy" type="button">Copiar el texto</button>
+          </div>
+        </details>
+      </div>
+      <div>
+        <p class="cnt" id="cnt"></p>
+        <div class="list" id="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="info">
+    <div><h3>De dónde salen los datos</h3>
+      <p>Del anexo 1 del oficio 2026-EE-407012 del Ministerio de Educación Nacional, del 29 de octubre de 2026, con corte al 28 de septiembre. El Ministerio lo entregó en respuesta a una solicitud de información de la senadora Laura Ahumada, después de una acción de tutela.</p>
+      <p>El estado de cada sede, la matrícula y las coordenadas son los que reportó el Ministerio. 129 sedes no traen coordenadas: aparecen en la lista, no en el mapa.</p></div>
+    <div><h3>Qué ha dicho el Ministerio</h3>
+      <ul><li><b>29 de octubre:</b> que «no es posible establecer un monto único, definitivo» para atender las sedes.</li>
+      <li><b>Noviembre:</b> que destinó $337.000 millones para 225 sedes y 11 instituciones de educación superior, y que había intervenido cinco sedes en Caldas.</li>
+      <li><b>En el Senado:</b> que son 1.073 las sedes con daños graves y que existe un cronograma de entregas.</li></ul>
+      <p>El Ministerio no ha publicado cuáles son las sedes priorizadas ni las fechas por sede. Cuando lo haga, aparecerán aquí, colegio por colegio.</p></div>
+    <div><h3>Cómo leer el estado</h3>
+      <ul><li><b>Colapso total y colapso parcial:</b> la sede se cayó, toda o en parte.</li>
+      <li><b>Riesgo inminente de colapso:</b> sigue en pie, pero puede caerse.</li>
+      <li><b>Afectación parcial y menor:</b> daños que no comprometen toda la estructura.</li></ul>
+      <p>«Estudiantes matriculados» es la matrícula de la sede. No significa que hoy reciban clase dentro del edificio.</p></div>
+  </section>
+</main>
+<footer class="pie"><div class="int"><b>Colegios en riesgo</b> · Elaboró: Cristian López, asesor de la UTL de la senadora Laura Ahumada · laura.ahumada@senado.gov.co · @lauracahumada · Corte de los datos: 28 de septiembre de 2026.</div></footer>
+
+<script>
+(function(){
+var PARA="atencionalciudadano@mineducacion.gov.co";
+var CC="laura.ahumada@senado.gov.co";   // copia de cada solicitud
+var GSV_KEY="";                          // llave de Google Street View Static: con ella aparece la foto de la entrada (solo fuera de Claude)
+var SAT="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+var EST=["Colapso total","Colapso parcial","Riesgo inminente de colapso","Afectación parcial","Afectación menor"];
+var COL=["#9B0F1E","#E2571A","#F0B000","#7C8794","#C3C9D0"];
+var on=[true,true,true,false,false], S=[], sel=null, shown=40, map, layer, ring, base=[], satL=null, labs=[], fuera=false;
+var $=function(id){return document.getElementById(id)};
+var nf=function(n){return n.toLocaleString("es-CO")};
+var norm=function(s){return s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()};
+var movil=("ontouchstart" in window)||(navigator.maxTouchPoints>0);
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+EST.forEach(function(e,i){var b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",on[i]);
+  b.innerHTML='<i style="background:'+COL[i]+'"></i>'+e;b.onclick=function(){on[i]=!on[i];b.setAttribute("aria-pressed",on[i]);shown=40;draw()};$("chips").appendChild(b)});
+
+function filt(){var d=$("fdep").value,m=$("fmun").value,q=norm($("fq").value.trim());
+  return S.filter(function(s){return on[s.e]&&(!d||s.dep===d)&&(!m||s.mun===m)&&(!q||s.k.indexOf(q)>=0)})}
+
+function draw(){var F=filt(),d=$("fdep").value,m=$("fmun").value;
+  F.sort(function(a,b){return a.e-b.e||b.mat-a.mat});
+  var crit=F.filter(function(s){return s.e<3});
+  $("t1").textContent=nf(crit.length);$("t2").textContent=nf(crit.reduce(function(a,s){return a+s.mat},0));
+  $("t3").textContent=nf(S.filter(function(s){return(!d||s.dep===d)&&(!m||s.mun===m)}).length);
+  $("t3s").textContent=(d||m)?"sedes afectadas en el territorio elegido":"sedes afectadas en 22 departamentos";
+  $("cnt").textContent=nf(F.length)+" sedes con los filtros actuales. Toque una para ver su ficha.";
+  var h="";F.slice(0,shown).forEach(function(s){h+='<button type="button" class="row" data-i="'+s.i+'"'+(sel&&sel.i===s.i?' aria-current="true"':'')+'><i style="background:'+COL[s.e]+'"></i><span><b>'+esc(s.sede)+'</b><small>'+esc(s.mun)+', '+esc(s.dep)+' · '+EST[s.e]+'</small></span><em>'+nf(s.mat)+'</em></button>'});
+  if(F.length>shown)h+='<button type="button" class="more" id="more">Ver más ('+nf(F.length-shown)+' restantes)</button>';
+  if(!F.length)h='<p style="padding:14px;margin:0">Ninguna sede coincide. Quite un filtro o active más estados.</p>';
+  $("list").innerHTML=h;
+  if(map){layer.clearLayers();for(var j=F.length-1;j>=0;j--){var s=F[j];if(s.la==null)continue;
+    var mk=L.circleMarker([s.la,s.lo],{radius:s.e<3?6:4,color:"#fff",weight:s.e<3?1.2:.6,fillColor:COL[s.e],fillOpacity:.95});mk.s=s;layer.addLayer(mk)}}
+}
+$("list").addEventListener("click",function(ev){var r=ev.target.closest(".row");if(r){pick(S[+r.dataset.i],true);if(window.innerWidth<=900)$("detail").scrollIntoView({behavior:"smooth",block:"start"})}else if(ev.target.id==="more"){shown+=60;draw()}});
+
+function pick(s,fly){sel=s;$("petbox").hidden=true;
+  var h='<h2>'+esc(s.sede)+'</h2><span class="pill'+(s.e===2||s.e===4?' d':'')+'" style="background:'+COL[s.e]+'">'+EST[s.e]+'</span>';
+  h+='<dl><dt>Establecimiento</dt><dd>'+esc(s.est)+'</dd><dt>Municipio</dt><dd>'+esc(s.mun)+', '+esc(s.dep)+'</dd><dt>Estudiantes matriculados</dt><dd>'+nf(s.mat)+'</dd><dt>Zona</dt><dd>'+(s.rur?"Rural":"Urbana")+'</dd><dt>Código DANE</dt><dd>'+s.cod+'</dd>';
+  if(s.res>=0)h+='<dt>Internado</dt><dd>Sí, '+nf(s.res)+' estudiantes residentes</dd>';
+  if(s.pd)h+='<dt>Territorio</dt><dd>'+(s.pd===2?"PDET y ZOMAC":"ZOMAC")+'</dd>';
+  if(!s.dec)h+='<dt>Declaratoria</dt><dd>Departamento fuera de la emergencia declarada</dd>';
+  h+='<dt>Coordenadas</dt><dd>'+(s.la==null?"No reportadas por el Ministerio":s.la.toFixed(5)+", "+s.lo.toFixed(5))+'</dd>';
+  h+='<dt>Obra, costo y fecha</dt><dd>El Ministerio no ha informado si esta sede está entre las priorizadas</dd></dl>';
+  if(s.la!=null){var c=s.la+","+s.lo,cap='<figcaption>Vista de calle en la coordenada que reportó el Ministerio (Google Street View). Si no hay foto de ese punto, el recuadro sale vacío.</figcaption>';
+    if(fuera&&GSV_KEY)h+='<figure class="foto" id="foto"><img alt="Vista de calle de la sede" src="https://maps.googleapis.com/maps/api/streetview?size=640x320&fov=85&return_error_code=true&location='+c+'&key='+encodeURIComponent(GSV_KEY)+'">'+cap+'</figure>';
+    else if(fuera)h+='<figure class="foto" id="foto"><iframe title="Vista de calle de la sede" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?layer=c&cbll='+c+'&cbp=11,0,0,0,0&output=svembed"></iframe>'+cap+'</figure>';
+    else h+='<p class="note" id="fotopend">La foto de la entrada se muestra en la versión publicada en la web.</p>'}
+  h+='<div class="acts"><button type="button" class="btn" id="bpet">Pedir cuentas al Ministerio</button></div>';
+  $("detail").innerHTML=h;
+  var fi=document.querySelector("#foto img");if(fi)fi.onerror=function(){var f=$("foto");if(f)f.remove()};
+  $("bpet").onclick=function(){$("petbox").hidden=false;build();$("petbox").scrollIntoView({behavior:"smooth",block:"start"})};
+  if(map&&s.la!=null){if(ring)ring.remove();ring=L.circleMarker([s.la,s.lo],{radius:14,color:"#E6007E",weight:4,fill:false}).addTo(map);if(fly)map.setView([s.la,s.lo],Math.max(map.getZoom(),satL&&map.hasLayer(satL)?16:11))}
+  Array.prototype.forEach.call(document.querySelectorAll(".row"),function(r){r.setAttribute("aria-current",+r.dataset.i===s.i)});
+}
+
+function texto(){var s=sel,n=$("pn").value.trim()||"[NOMBRE COMPLETO]",c=$("pc").value.trim()||"[CÉDULA]",e=$("pe").value.trim()||"[CORREO]",m=$("pm").value.trim()||"[MUNICIPIO]",r=$("pr").value;
+  return "Señores\nMINISTERIO DE EDUCACIÓN NACIONAL\n\n"+
+  "Yo, "+n+", C.C. "+c+", "+r+", en ejercicio del derecho de petición (art. 23 de la Constitución y Ley 1755 de 2015), pido información sobre la sede «"+s.sede+"» (DANE "+s.cod+"), de "+s.mun+", "+s.dep+", que ese Ministerio clasificó como «"+EST[s.e]+"» tras el sismo del 10 de agosto de 2026 (oficio 2026-EE-407012).\n\n"+
+  "Con corte a la fecha de respuesta, solicito informar:\n"+
+  "1. Si la sede tiene diagnóstico estructural, con copia.\n"+
+  "2. Si está entre las 225 sedes priorizadas, qué obra se hará, su costo y la fuente.\n"+
+  "3. El cronograma de obra, con fechas de inicio y entrega, y el responsable.\n"+
+  "4. Los recursos asignados o girados a esta sede.\n"+
+  "5. Dónde reciben clase hoy sus estudiantes y dónde lo harán en 2027.\n\n"+
+  "Si algo corresponde a otra entidad, pido el traslado (art. 21, Ley 1437 de 2011).\n\n"+
+  "Recibo respuesta en "+e+".\n\n"+n+"\nC.C. "+c+"\n"+m}
+function asunto(){return "Derecho de petición - sede "+sel.sede+" ("+sel.mun+") - sismo 2026"}
+function links(){var t=$("ptxt").value,su=asunto(),E=encodeURIComponent;
+  var q="to="+E(PARA)+(CC?"&cc="+E(CC):"")+"&subject="+E(su)+"&body="+E(t);
+  var g="https://mail.google.com/mail/?view=cm&fs=1&to="+E(PARA)+(CC?"&cc="+E(CC):"")+"&su="+E(su)+"&body="+E(t);
+  var o="https://outlook.live.com/mail/0/deeplink/compose?"+q, y="https://compose.mail.yahoo.com/?"+q;
+  var ml="mailto:"+PARA+"?"+(CC?"cc="+E(CC)+"&":"")+"subject="+E(su)+"&body="+E(t);
+  $("bgmail").href=g;$("bout").href=o;$("byah").href=y;$("bmail").href=ml;
+  var dom=($("pe").value.split("@")[1]||"").toLowerCase(),dest=ml,web=false;
+  if(!movil){if(/^(gmail|googlemail)\./.test(dom)){dest=g;web=true}else if(/^(outlook|hotmail|live|msn)\./.test(dom)){dest=o;web=true}else if(/^(yahoo|ymail)\./.test(dom)){dest=y;web=true}}
+  var b=$("benviar");b.href=dest;if(web)b.target="_blank";else b.removeAttribute("target")}
+function build(){$("ptxt").value=texto();$("pas").textContent=asunto();$("pto").textContent=PARA;$("pcc").textContent=CC||"sin copia";$("pok").textContent="";$("perr").textContent="";links()}
+["pn","pc","pe","pm","pr"].forEach(function(id){$(id).addEventListener("input",function(){if(id==="pc"){var v=$(id).value.replace(/\D/g,"");if(v!==$(id).value)$(id).value=v}$(id).classList.remove("mal");if(sel)build()})});
+$("ptxt").addEventListener("input",links);
+$("pet").addEventListener("submit",function(e){e.preventDefault()});
+$("benviar").addEventListener("click",function(ev){var falta=[];
+  [["pn","su nombre completo",function(v){return v.length>4}],["pc","su cédula",function(v){return /^[\d.\s]{5,}$/.test(v)}],["pe","un correo válido",function(v){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)}],["pm","su municipio",function(v){return v.length>1}]].forEach(function(c){var el=$(c[0]),ok=c[2](el.value.trim());el.classList.toggle("mal",!ok);if(!ok)falta.push(c[1])});
+  if(falta.length){ev.preventDefault();$("pok").textContent="";$("perr").textContent="Falta "+falta.join(", ")+".";$(["pn","pc","pe","pm"].filter(function(i){return $(i).classList.contains("mal")})[0]).focus();return}
+  $("perr").textContent="";var fin=function(cp){$("pok").textContent="Se abrió su correo con la solicitud. Oprima Enviar allí: solo entonces queda radicada. "+(cp?"Si el mensaje llegó vacío, péguelo: el texto ya quedó copiado.":"Si el mensaje llegó vacío o no se abrió nada, use las opciones de aquí abajo.")};
+  try{navigator.clipboard.writeText($("ptxt").value).then(function(){fin(true)},function(){fin(false)})}catch(e){fin(false)}});
+$("bcopy").onclick=function(){var t=$("ptxt"),msg="Texto copiado. Péguelo en un correo nuevo para "+PARA+(CC?", con copia a "+CC:"")+".",alt=function(){t.focus();t.select();$("pok").textContent="Seleccioné el texto: cópielo con el menú de su teléfono o con Ctrl+C."};
+  try{navigator.clipboard.writeText(t.value).then(function(){$("pok").textContent=msg},alt)}catch(e){alt()}};
+
+function fillMun(){var d=$("fdep").value,set={};S.forEach(function(s){if(!d||s.dep===d)set[s.mun]=1});
+  $("fmun").innerHTML='<option value="">Todos</option>'+Object.keys(set).sort(function(a,b){return a.localeCompare(b,"es")}).map(function(m){return "<option>"+esc(m)+"</option>"}).join("")}
+$("fdep").onchange=function(){fillMun();shown=40;draw();zoomTo()};
+$("fmun").onchange=function(){shown=40;draw();zoomTo()};
+$("fq").oninput=function(){shown=40;draw()};
+function zoomTo(){if(!map)return;var d=$("fdep").value,m=$("fmun").value;var pts=S.filter(function(s){return s.la!=null&&(!d||s.dep===d)&&(!m||s.mun===m)}).map(function(s){return[s.la,s.lo]});if(pts.length)map.fitBounds(pts,{padding:[30,30],maxZoom:13})}
+
+function capa(sat){if(!map)return;if(!satL){$("avsat").hidden=!sat;if(sat)setTimeout(function(){$("avsat").hidden=true},6000);return}$("csat").setAttribute("aria-pressed",sat);$("cmapa").setAttribute("aria-pressed",!sat);$("map").classList.toggle("sat",sat);
+  if(sat){satL.addTo(map);satL.bringToBack();base.forEach(function(b){b.setStyle(b.k==="m"?{fillOpacity:0,color:"#ffffff",opacity:.35}:{color:"#ffffff",opacity:.9})})}
+  else{map.removeLayer(satL);base.forEach(function(b){b.setStyle(b.k==="m"?{fillOpacity:1,color:"#C9CCC2",opacity:1}:{color:"#8C9084",opacity:1})})}}
+$("csat").onclick=function(){capa(true)};$("cmapa").onclick=function(){capa(false)};
+
+$("detail").innerHTML='<h2>Elija una sede</h2><p style="margin:0">Toque un punto del mapa o una fila de la lista para ver la ficha de la sede y enviar su solicitud al Ministerio. Las sedes más graves aparecen primero.</p>';
+
+fetch("sedes.json").then(function(r){return r.json()}).then(function(A){
+  S=A.map(function(a,i){return{i:i,cod:a[0],sede:a[1],est:a[2],dep:a[3],mun:a[4],dm:a[5],e:a[6],mat:a[7],rur:a[8],la:a[9],lo:a[10],pd:a[11],res:a[12],dec:a[13],k:norm(a[1]+" "+a[2]+" "+a[4])}});
+  var deps={};S.forEach(function(s){deps[s.dep]=1});
+  $("fdep").innerHTML='<option value="">Todos</option>'+Object.keys(deps).sort(function(a,b){return a.localeCompare(b,"es")}).map(function(d){return "<option>"+esc(d)+"</option>"}).join("");
+  fillMun();draw();
+  var cdns=["https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js","https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"];
+  $("map").innerHTML='<p style="padding:16px;margin:0">Cargando el mapa… La lista ya funciona.</p>';
+  (function load(n){if(n>=cdns.length){$("map").innerHTML='<p style="padding:16px;margin:0">El mapa no cargó en este dispositivo. La lista y las fichas funcionan igual: elija su departamento y municipio.</p>';return}
+    var sc=document.createElement("script");sc.src=cdns[n];sc.onload=function(){$("map").innerHTML="";initMap()};sc.onerror=function(){load(n+1)};document.head.appendChild(sc)})(0);
+  function initMap(){
+    try{map=L.map("map",{preferCanvas:true,zoomSnap:.5,minZoom:5,maxZoom:18,attributionControl:true,dragging:!movil,tap:false}).setView([4.6,-75.6],movil?5.5:6.5);
+      map.attributionControl.setPrefix("");
+      if(movil){map.touchZoom.enable();var av=L.control({position:"bottomleft"});av.onAdd=function(){var d=L.DomUtil.create("div");d.style.cssText="background:#fff;border:1px solid #9CA3AF;border-radius:8px;padding:6px 9px;font:600 12px var(--fuente)";d.innerHTML='<button type="button" id="mover" style="border:0;background:none;font:inherit;color:#C4006B;padding:4px;min-height:32px">Tocar para mover el mapa</button>';L.DomEvent.disableClickPropagation(d);return d};av.addTo(map);
+        setTimeout(function(){var b=$("mover");if(b)b.onclick=function(){var a=map.dragging.enabled();if(a){map.dragging.disable();b.textContent="Tocar para mover el mapa"}else{map.dragging.enable();b.textContent="Fijar el mapa para bajar la página"}}},0)}
+      layer=L.layerGroup().addTo(map);
+      fetch("mpios.json").then(function(r){return r.json()}).then(function(g){
+        var a=L.geoJSON(g,{interactive:false,style:{color:"#C9CCC2",weight:.6,fillColor:"#FBFBF8",fillOpacity:1}}).addTo(map);a.bringToBack();a.k="m";base.push(a);
+        return fetch("deptos.json")}).then(function(r){return r.json()}).then(function(g){
+        var b=L.geoJSON(g,{interactive:false,style:{color:"#8C9084",weight:1.3,fill:false}}).addTo(map);b.k="d";base.push(b);
+        g.features.forEach(function(f){var c=L.geoJSON(f).getBounds().getCenter();L.marker(c,{interactive:false,icon:L.divIcon({className:"dlab",html:f.properties.n,iconSize:[120,14]})}).addTo(map)});
+      }).catch(function(){});
+      var pr=new Image();pr.onload=function(){fuera=true;satL=L.tileLayer(SAT,{maxZoom:18,maxNativeZoom:17,attribution:"Imágenes: Esri, Maxar, Earthstar Geographics"});if(sel&&$("petbox").hidden)pick(sel,false)};pr.src=SAT.replace("{z}","5").replace("{y}","15").replace("{x}","9");
+    }catch(e){$("map").innerHTML='<p style="padding:16px;margin:0">El mapa no cargó en este dispositivo. La lista y las fichas funcionan igual.</p>';map=null;return}
+    draw();
+    map.on("click",function(ev){var best=null,bd=1e9;layer.eachLayer(function(m){var p=map.latLngToContainerPoint(m.getLatLng()),dx=p.x-ev.containerPoint.x,dy=p.y-ev.containerPoint.y,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=m}});if(best&&bd<(movil?600:200)){pick(best.s,false);if(window.innerWidth<=900)$("detail").scrollIntoView({behavior:"smooth",block:"start"})}});
+  }
+}).catch(function(){$("list").innerHTML='<p style="padding:14px;margin:0">No se pudieron cargar los datos. Recargue la página.</p>'});
+(function(){var p=$("puerta"),k="cer_acepto",ya=false;try{ya=sessionStorage.getItem(k)==="1"}catch(e){}
+  var DD=Math.floor((Date.now()-new Date(2026,7,10).getTime())/864e5);$("idias").textContent=DD;
+  var fuera=[$("cabeza"),$("interpela"),document.querySelector("main"),document.querySelector("footer")];
+  function abrir(){p.remove();document.body.style.overflow="";fuera.forEach(function(x){if(x)x.inert=false});if(map)map.invalidateSize()}
+  if(ya){abrir();return}
+  $("pdias").textContent=Math.floor((Date.now()-new Date(2026,7,10).getTime())/864e5);
+  var lg=document.querySelector("#cabeza .bloque-logo img");if(lg)$("plogo").appendChild(lg.cloneNode());
+  document.body.style.overflow="hidden";fuera.forEach(function(x){if(x)x.inert=true});
+  $("pchk").onchange=function(){$("pentrar").disabled=!this.checked};
+  $("pentrar").onclick=function(){if(!$("pchk").checked)return;try{sessionStorage.setItem(k,"1")}catch(e){}abrir()};
+})();
+})();
+
+</script>
+</body>
+</html>
