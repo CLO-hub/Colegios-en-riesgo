@@ -48,6 +48,7 @@ a{color:var(--fucsia-osc)}
 .oficina .l2{font-weight:600;font-size:.8rem;color:#E5E7EB;margin:1px 0 0}
 .oficina .l3{font-size:.7rem;color:#9CA3AF;margin:1px 0 0}
 .linea{height:5px;background:var(--fucsia)}
+.vis{max-width:1240px;margin:8px auto 0;padding:0 16px;font-size:.72rem;opacity:.65;text-align:right}
 .dud{display:inline-block;font-weight:600;font-size:.82rem;color:#92400E;background:#FEF3C7;border-radius:6px;padding:4px 8px;margin-top:4px}
 .desc{margin:12px 0 0;font-size:.95rem}.desc .acts{display:inline-flex;margin:6px 0 0 6px;vertical-align:middle}
 .interpela{background:#0E1118;color:#fff;border-bottom:5px solid var(--fucsia)}
@@ -839,17 +840,18 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <h3>Qué puede hacer aquí</h3>
       <div class="pdos"><div><i>1</i><b>Buscar su colegio</b><br>Vea en el mapa qué riesgo de colapso le asignó el Ministerio de Educación tras el terremoto.</div><div><i>2</i><b>Pedir cuentas</b><br>Arme en un minuto su derecho de petición y envíelo desde su propio correo.</div></div>
       <h3>Sus datos</h3>
-      <div class="pdat"><b class="g">Esta página no guarda sus datos.</b>
+      <div class="pdat"><b class="g">No guardamos, no recibimos y no compartimos sus datos.</b>
         <ul><li>Lo que escriba se queda en su teléfono o computador y solo sirve para armar su correo.</li>
-        <li>El correo lo envía usted, desde su cuenta, al Ministerio de Educación, con copia a la senadora.</li>
-        <li>Esa copia se usa únicamente para hacer seguimiento a la respuesta del Ministerio.</li></ul>
+        <li>El correo lo envía usted, desde su cuenta, únicamente al Ministerio de Educación. Ni la senadora ni su equipo reciben copia.</li>
+        <li>No hay registro, base de datos ni lista de quienes usan esta página.</li></ul>
       </div>
-      <details><summary>Leer la autorización y las condiciones completas</summary>
-        <p><b>Tratamiento de datos.</b> Esta herramienta no recolecta, almacena ni transmite a servidores propios ni de terceros los datos que usted escriba (nombre, cédula, correo, municipio). El mensaje se arma en su dispositivo y usted decide si lo envía. Al enviarlo con copia a laura.ahumada@senado.gov.co, y de conformidad con el artículo 15 de la Constitución y la Ley 1581 de 2012, usted autoriza de manera libre, previa, expresa e informada a Laura Cristina Ahumada García, Senadora de la República, a conocer y conservar esa copia con la única finalidad de hacer seguimiento y control político a la respuesta del Ministerio de Educación. Puede borrar la copia antes de enviar su correo. Puede ejercer sus derechos de acceso, actualización, rectificación, supresión y revocatoria escribiendo a ese mismo correo.</p>
+      <details><summary>Leer las condiciones completas</summary>
+        <p><b>Tratamiento de datos personales.</b> Esta herramienta no recolecta, almacena, consulta ni transmite los datos que usted escriba (nombre, cédula, correo, municipio): no llegan a la senadora Laura Ahumada, a su equipo, a servidores propios ni a terceros. El mensaje se arma dentro de su navegador y se borra al cerrar la página. Usted decide si lo envía, lo hace desde su propia cuenta de correo y el único destinatario es el Ministerio de Educación Nacional, que tratará sus datos como autoridad que recibe un derecho de petición. Como aquí no se recolecta ningún dato personal, no se le pide autorización de tratamiento (Ley 1581 de 2012).</p>
+        <p><b>Contador de visitas.</b> La página suma un número cada vez que alguien la abre, mediante un servicio externo de conteo (abacus.jasoncameron.dev). Ese contador no recibe ninguno de los datos que usted escriba. Las imágenes de satélite las sirve Esri y las tipografías, Google: como en cualquier sitio web, esos servicios reciben la solicitud técnica de su navegador.</p>
         <p><b>Responsabilidad.</b> La solicitud se presenta a nombre suyo y bajo su responsabilidad; su envío, contenido y seguimiento dependen de usted. El uso de esta herramienta no constituye poder ni mandato, asesoría jurídica, afiliación partidista ni obligación de respaldo electoral.</p>
         <p><b>Fuente.</b> El listado, el estado y las coordenadas de cada sede provienen del anexo 1 del oficio 2026-EE-407012 del Ministerio de Educación Nacional (29 de octubre de 2026, corte 28 de septiembre). La situación de una sede puede haber cambiado. Esta página no es un concepto técnico sobre la seguridad de ninguna edificación.</p>
       </details>
-      <label class="pacep" for="pchk"><input type="checkbox" id="pchk"><span>Leí y acepto. Entiendo que esta página no guarda mis datos y que, si envío una solicitud, lo hago desde mi correo y con copia a la senadora.</span></label>
+      <label class="pacep" for="pchk"><input type="checkbox" id="pchk"><span>Leí y acepto. Entiendo que esta página no guarda ni recibe mis datos y que, si envío una solicitud, lo hago yo, desde mi correo, únicamente al Ministerio de Educación.</span></label>
       <div class="acts"><button type="button" class="btn grande" id="pentrar" disabled>Entrar al mapa</button></div>
       <p class="note" style="text-align:center;margin-top:12px">Elaboró: <b>Cristian López</b> · Asesor UTL Senadora Laura Ahumada</p>
     </div>
@@ -912,7 +914,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="card" id="detail"></div>
       <div class="card" id="petbox" hidden>
         <h2>Envíe su solicitud al Ministerio</h2>
-        <ol class="pasos"><li>Llene sus datos.</li><li>Revise aquí mismo cómo queda su correo.</li><li>Oprima «Enviar mi solicitud»: se abre su correo con ese mensaje, dirigido al Ministerio y con copia a la senadora.</li><li>En su correo, oprima Enviar. Ahí queda radicada a su nombre.</li></ol>
+        <ol class="pasos"><li>Llene sus datos.</li><li>Revise aquí mismo cómo queda su correo.</li><li>Oprima «Enviar mi solicitud»: se abre su correo con ese mensaje, dirigido únicamente al Ministerio.</li><li>En su correo, oprima Enviar. Ahí queda radicada a su nombre.</li></ol>
         <form class="pet" id="pet" novalidate>
           <label class="full" for="pn">Nombres y apellidos<input type="text" id="pn" autocomplete="name" placeholder="Ej.: Carlos Martínez Rojas"></label>
           <label for="pc">Número de cédula <small>Solo números.</small><input type="text" id="pc" inputmode="numeric" pattern="[0-9]*" maxlength="12" autocomplete="off" placeholder="Ej.: 1098765432"></label>
@@ -965,13 +967,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <p>«Estudiantes matriculados» es la matrícula de la sede. No significa que hoy reciban clase dentro del edificio.</p></div>
   </section>
 </main>
-<footer class="pie"><div class="int"><b>Colegios en riesgo</b> · Elaboró: Cristian López, asesor de la UTL de la senadora Laura Ahumada · laura.ahumada@senado.gov.co · @lauracahumada · Corte de los datos: 28 de septiembre de 2026.</div></footer>
+<footer class="pie"><div class="int"><b>Colegios en riesgo</b> · Elaboró: Cristian López, asesor de la UTL de la senadora Laura Ahumada · laura.ahumada@senado.gov.co · @lauracahumada · Corte de los datos: 28 de septiembre de 2026.</div><p class="vis" id="vis" hidden>Visitas: <b id="visn"></b></p></footer>
 
 <script>
 (function(){
 var PARA="atencionalciudadano@mineducacion.gov.co";
-var CC="laura.ahumada@senado.gov.co";   // copia de cada solicitud
-var GSV_KEY="";                          // llave de Google Street View Static: con ella aparece la foto de la entrada (solo fuera de Claude)
+var CC="";   // sin copia: el correo va solo al Ministerio
 var SAT="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 var EST=["Colapso total","Colapso parcial","Riesgo inminente de colapso","Afectación parcial","Afectación menor"];
 var COL=["#9B0F1E","#E2571A","#F0B000","#7C8794","#C3C9D0"];
@@ -1007,10 +1008,6 @@ $("list").addEventListener("click",function(ev){var r=ev.target.closest(".row");
 function pick(s,fly){sel=s;$("petbox").hidden=true;
   var h='<div class="fcab"><div class="fnom"><h2>'+esc(s.sede)+'</h2><span class="pill'+(s.e===2||s.e===4?' d':'')+'" style="background:'+COL[s.e]+'">'+EST[s.e]+'</span>';
   h+='</div>';
-  if(s.la!=null){var c=s.la+","+s.lo,cap='<figcaption>Calle más cercana a la coordenada que reportó el Ministerio (Google Street View). La cámara puede no apuntar al colegio.</figcaption>';
-    if(fuera&&GSV_KEY)h+='<figure class="foto" id="foto"><img alt="Vista de calle de la sede" src="https://maps.googleapis.com/maps/api/streetview?size=640x320&fov=85&return_error_code=true&location='+c+'&key='+encodeURIComponent(GSV_KEY)+'">'+cap+'</figure>';
-    else if(fuera)h+='<figure class="foto" id="foto"><iframe title="Vista de calle de la sede" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?layer=c&cbll='+c+'&cbp=11,0,0,0,0&output=svembed"></iframe>'+cap+'</figure>';
-    else h+='<p class="note fpend" id="fotopend">Foto de la entrada: visible en la versión web.</p>'}
   h+='</div>';
   h+='<dl><dt>Establecimiento</dt><dd>'+esc(s.est)+'</dd><dt>Municipio</dt><dd>'+esc(s.mun)+', '+esc(s.dep)+'</dd><dt>Estudiantes matriculados</dt><dd>'+nf(s.mat)+'</dd><dt>Zona</dt><dd>'+(s.rur?"Rural":"Urbana")+'</dd><dt>Código DANE</dt><dd>'+s.cod+'</dd>';
   if(s.res>=0)h+='<dt>Internado</dt><dd>Sí, '+nf(s.res)+' estudiantes residentes</dd>';
@@ -1020,7 +1017,6 @@ function pick(s,fly){sel=s;$("petbox").hidden=true;
   h+='<dt>Obra, costo y fecha</dt><dd>El Ministerio no ha informado si esta sede está entre las priorizadas</dd></dl>';
   h+='<div class="acts"><button type="button" class="btn" id="bpet">Pedir cuentas al Ministerio</button></div>';
   $("detail").innerHTML=h;
-  var fi=document.querySelector("#foto img");if(fi)fi.onerror=function(){var f=$("foto");if(f)f.remove()};
   $("bpet").onclick=function(){$("petbox").hidden=false;build();$("petbox").scrollIntoView({behavior:"smooth",block:"start"})};
   if(map&&s.la!=null){if(ring)ring.remove();ring=L.circleMarker([s.la,s.lo],{radius:14,color:"#E6007E",weight:4,fill:false}).addTo(map);if(fly)map.setView([s.la,s.lo],Math.max(map.getZoom(),satL&&map.hasLayer(satL)?16:11))}
   Array.prototype.forEach.call(document.querySelectorAll(".row"),function(r){r.setAttribute("aria-current",+r.dataset.i===s.i)});
@@ -1037,7 +1033,7 @@ function texto(){var s=sel,n=$("pn").value.trim()||"[NOMBRE COMPLETO]",c=$("pc")
   "5. Dónde reciben clase hoy sus estudiantes y dónde lo harán en 2027.\n\n"+
   "Si algo corresponde a otra entidad, pido el traslado (art. 21, Ley 1437 de 2011).\n\n"+
   "Recibo respuesta en "+e+".\n\n"+n+"\nC.C. "+c+"\n"+m}
-function asunto(){return "Derecho de petición - sede "+sel.sede+" ("+sel.mun+") - sismo 2026"}
+function asunto(){return "Derecho de petición #ColegiosEnRiesgo - sede "+sel.sede+" ("+sel.mun+")"}
 function links(){var t=$("ptxt").value,su=asunto(),E=encodeURIComponent;
   var q="to="+E(PARA)+(CC?"&cc="+E(CC):"")+"&subject="+E(su)+"&body="+E(t);
   var g="https://mail.google.com/mail/?view=cm&fs=1&to="+E(PARA)+(CC?"&cc="+E(CC):"")+"&su="+E(su)+"&body="+E(t);
@@ -1047,7 +1043,7 @@ function links(){var t=$("ptxt").value,su=asunto(),E=encodeURIComponent;
   var dom=($("pe").value.split("@")[1]||"").toLowerCase(),dest=ml,web=false;
   if(!movil){if(/^(gmail|googlemail)\./.test(dom)){dest=g;web=true}else if(/^(outlook|hotmail|live|msn)\./.test(dom)){dest=o;web=true}else if(/^(yahoo|ymail)\./.test(dom)){dest=y;web=true}}
   var b=$("benviar");b.href=dest;if(web)b.target="_blank";else b.removeAttribute("target")}
-function build(){$("ptxt").value=texto();$("pas").textContent=asunto();$("pto").textContent=PARA;$("pcc").textContent=CC||"sin copia";$("pok").textContent="";$("perr").textContent="";links()}
+function build(){$("ptxt").value=texto();$("pas").textContent=asunto();$("pto").textContent=PARA;$("pcc").textContent=CC||"nadie";$("pok").textContent="";$("perr").textContent="";links()}
 ["pn","pc","pe","pm","pr"].forEach(function(id){$(id).addEventListener("input",function(){if(id==="pc"){var v=$(id).value.replace(/\D/g,"");if(v!==$(id).value)$(id).value=v}$(id).classList.remove("mal");if(sel)build()})});
 $("ptxt").addEventListener("input",links);
 $("pet").addEventListener("submit",function(e){e.preventDefault()});
@@ -1102,6 +1098,8 @@ fetch("sedes.json").then(function(r){return r.json()}).then(function(A){
 }).catch(function(){$("list").innerHTML='<p style="padding:14px;margin:0">No se pudieron cargar los datos. Recargue la página.</p>'});
 (function(){var p=$("puerta"),k="cer_acepto",ya=false;try{ya=sessionStorage.getItem(k)==="1"}catch(e){}
   if(/claude/i.test(location.hostname)){var ds=$("desc");ds.querySelector(".acts").remove();ds.insertAdjacentHTML("beforeend"," <i>Las descargas están en la versión web.</i>")}
+  if(!/claude/i.test(location.hostname)&&location.protocol!=="file:"){var vk="cer_visto",vy=false;try{vy=sessionStorage.getItem(vk)==="1"}catch(e){}
+    fetch("https://abacus.jasoncameron.dev/"+(vy?"get":"hit")+"/colegios-en-riesgo/visitas").then(function(r){return r.json()}).then(function(d){if(d&&typeof d.value==="number"){$("visn").textContent=nf(d.value);$("vis").hidden=false;try{sessionStorage.setItem(vk,"1")}catch(e){}}}).catch(function(){})}
   var DD=Math.floor((Date.now()-new Date(2026,7,10).getTime())/864e5);$("idias").textContent=DD;
   var fuera=[$("cabeza"),$("interpela"),document.querySelector("main"),document.querySelector("footer")];
   function abrir(){p.remove();document.body.style.overflow="";fuera.forEach(function(x){if(x)x.inert=false});if(map)map.invalidateSize()}
