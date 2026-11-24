@@ -48,6 +48,7 @@ a{color:var(--fucsia-osc)}
 .oficina .l2{font-weight:600;font-size:.8rem;color:#E5E7EB;margin:1px 0 0}
 .oficina .l3{font-size:.7rem;color:#9CA3AF;margin:1px 0 0}
 .linea{height:5px;background:var(--fucsia)}
+.dud{display:inline-block;font-weight:600;font-size:.82rem;color:#92400E;background:#FEF3C7;border-radius:6px;padding:4px 8px;margin-top:4px}
 .desc{margin:12px 0 0;font-size:.95rem}.desc .acts{display:inline-flex;margin:6px 0 0 6px;vertical-align:middle}
 .interpela{background:#0E1118;color:#fff;border-bottom:5px solid var(--fucsia)}
 .interpela .int{padding-top:20px;padding-bottom:20px}
@@ -951,7 +952,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <section class="info">
     <div><h3>De dónde salen los datos</h3>
       <p>Del anexo 1 del oficio 2026-EE-407012 del Ministerio de Educación Nacional, del 29 de octubre de 2026, con corte al 28 de septiembre. El Ministerio lo entregó en respuesta a una solicitud de información de la senadora Laura Ahumada, después de una acción de tutela.</p>
-      <p>El estado de cada sede, la matrícula y las coordenadas son los que reportó el Ministerio. 129 sedes no traen coordenadas: aparecen en la lista, no en el mapa.</p></div>
+      <p>El estado de cada sede, la matrícula y las coordenadas son los que reportó el Ministerio. 129 sedes no traen coordenadas y otras 598 traen una coordenada dudosa (cae fuera de su municipio o el Ministerio la repite para varias sedes): aparecen en la lista, no en el mapa.</p></div>
     <div><h3>Qué ha dicho el Ministerio</h3>
       <ul><li><b>29 de octubre:</b> que «no es posible establecer un monto único, definitivo» para atender las sedes.</li>
       <li><b>Noviembre:</b> que destinó $337.000 millones para 225 sedes y 11 instituciones de educación superior, y que había intervenido cinco sedes en Caldas.</li>
@@ -1006,7 +1007,7 @@ $("list").addEventListener("click",function(ev){var r=ev.target.closest(".row");
 function pick(s,fly){sel=s;$("petbox").hidden=true;
   var h='<div class="fcab"><div class="fnom"><h2>'+esc(s.sede)+'</h2><span class="pill'+(s.e===2||s.e===4?' d':'')+'" style="background:'+COL[s.e]+'">'+EST[s.e]+'</span>';
   h+='</div>';
-  if(s.la!=null){var c=s.la+","+s.lo,cap='<figcaption>Vista de calle en la coordenada reportada por el Ministerio (Google Street View).</figcaption>';
+  if(s.la!=null){var c=s.la+","+s.lo,cap='<figcaption>Calle más cercana a la coordenada que reportó el Ministerio (Google Street View). La cámara puede no apuntar al colegio.</figcaption>';
     if(fuera&&GSV_KEY)h+='<figure class="foto" id="foto"><img alt="Vista de calle de la sede" src="https://maps.googleapis.com/maps/api/streetview?size=640x320&fov=85&return_error_code=true&location='+c+'&key='+encodeURIComponent(GSV_KEY)+'">'+cap+'</figure>';
     else if(fuera)h+='<figure class="foto" id="foto"><iframe title="Vista de calle de la sede" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?layer=c&cbll='+c+'&cbp=11,0,0,0,0&output=svembed"></iframe>'+cap+'</figure>';
     else h+='<p class="note fpend" id="fotopend">Foto de la entrada: visible en la versión web.</p>'}
@@ -1015,7 +1016,7 @@ function pick(s,fly){sel=s;$("petbox").hidden=true;
   if(s.res>=0)h+='<dt>Internado</dt><dd>Sí, '+nf(s.res)+' estudiantes residentes</dd>';
   if(s.pd)h+='<dt>Territorio</dt><dd>'+(s.pd===2?"PDET y ZOMAC":"ZOMAC")+'</dd>';
   if(!s.dec)h+='<dt>Declaratoria</dt><dd>Departamento fuera de la emergencia declarada</dd>';
-  h+='<dt>Coordenadas</dt><dd>'+(s.la==null?"No reportadas por el Ministerio":s.la.toFixed(5)+", "+s.lo.toFixed(5))+'</dd>';
+  h+='<dt>Coordenadas</dt><dd>'+(s.du?s.rla.toFixed(5)+", "+s.rlo.toFixed(5)+'<br><span class="dud">Coordenada dudosa: el Ministerio la reporta fuera del municipio o repetida para varias sedes. No la ubicamos en el mapa.</span>':s.la==null?"No reportadas por el Ministerio":s.la.toFixed(5)+", "+s.lo.toFixed(5))+'</dd>';
   h+='<dt>Obra, costo y fecha</dt><dd>El Ministerio no ha informado si esta sede está entre las priorizadas</dd></dl>';
   h+='<div class="acts"><button type="button" class="btn" id="bpet">Pedir cuentas al Ministerio</button></div>';
   $("detail").innerHTML=h;
@@ -1073,7 +1074,7 @@ $("csat").onclick=function(){capa(true)};$("cmapa").onclick=function(){capa(fals
 $("detail").innerHTML='<h2>Elija una sede</h2><p style="margin:0">Toque un punto del mapa o una fila de la lista para ver la ficha de la sede y enviar su solicitud al Ministerio. Las sedes más graves aparecen primero.</p>';
 
 fetch("sedes.json").then(function(r){return r.json()}).then(function(A){
-  S=A.map(function(a,i){return{i:i,cod:a[0],sede:a[1],est:a[2],dep:a[3],mun:a[4],dm:a[5],e:a[6],mat:a[7],rur:a[8],la:a[9],lo:a[10],pd:a[11],res:a[12],dec:a[13],k:norm(a[1]+" "+a[2]+" "+a[4])}});
+  S=A.map(function(a,i){return{i:i,cod:a[0],sede:a[1],est:a[2],dep:a[3],mun:a[4],dm:a[5],e:a[6],mat:a[7],rur:a[8],du:a[14],la:a[14]?null:a[9],lo:a[14]?null:a[10],rla:a[9],rlo:a[10],pd:a[11],res:a[12],dec:a[13],k:norm(a[1]+" "+a[2]+" "+a[4])}});
   var deps={};S.forEach(function(s){deps[s.dep]=1});
   $("fdep").innerHTML='<option value="">Todos</option>'+Object.keys(deps).sort(function(a,b){return a.localeCompare(b,"es")}).map(function(d){return "<option>"+esc(d)+"</option>"}).join("");
   fillMun();draw();
