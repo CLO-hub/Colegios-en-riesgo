@@ -1089,9 +1089,9 @@ fetch("sedes.json").then(function(r){return r.json()}).then(function(A){
         setTimeout(function(){var b=$("mover");if(b)b.onclick=function(){var a=map.dragging.enabled();if(a){map.dragging.disable();b.textContent="Tocar para mover el mapa"}else{map.dragging.enable();b.textContent="Fijar el mapa para bajar la página"}}},0)}
       layer=L.layerGroup().addTo(map);
       fetch("mpios.json").then(function(r){return r.json()}).then(function(g){
-        var a=L.geoJSON(g,{interactive:false,style:{color:"#C9CCC2",weight:.6,fillColor:"#FBFBF8",fillOpacity:1}}).addTo(map);a.bringToBack();a.k="m";base.push(a);
+        var a=L.geoJSON(g,{interactive:false,style:{color:"#C9CCC2",weight:.6,fillColor:"#FBFBF8",fillOpacity:1}}).addTo(map);a.bringToBack();a.k="m";base.push(a);if(satL&&map.hasLayer(satL))capa(true);
         return fetch("deptos.json")}).then(function(r){return r.json()}).then(function(g){
-        var b=L.geoJSON(g,{interactive:false,style:{color:"#8C9084",weight:1.3,fill:false}}).addTo(map);b.k="d";base.push(b);
+        var b=L.geoJSON(g,{interactive:false,style:{color:"#8C9084",weight:1.3,fill:false}}).addTo(map);b.k="d";base.push(b);if(satL&&map.hasLayer(satL))capa(true);
         g.features.forEach(function(f){var c=L.geoJSON(f).getBounds().getCenter();L.marker(c,{interactive:false,icon:L.divIcon({className:"dlab",html:f.properties.n,iconSize:[120,14]})}).addTo(map)});
       }).catch(function(){});
       var pr=new Image();pr.onload=function(){fuera=true;satL=L.tileLayer(SAT,{maxZoom:18,maxNativeZoom:17,attribution:"Imágenes: Esri, Maxar, Earthstar Geographics"});capa(true);if(sel&&$("petbox").hidden)pick(sel,false)};pr.src=SAT.replace("{z}","5").replace("{y}","15").replace("{x}","9");
