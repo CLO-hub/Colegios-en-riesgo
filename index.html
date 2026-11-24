@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Colegios en riesgo</title>
+<meta name="description" content="1.073 colegios caídos o en riesgo de colapso y 201.833 estudiantes, tres meses después del terremoto. Busque su colegio en el mapa y pídale cuentas al Gobierno.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://clo-hub.github.io/Colegios-en-riesgo/">
+<meta property="og:site_name" content="Colegios en riesgo">
+<meta property="og:title" content="¿El colegio de sus hijos sigue en riesgo tres meses después del terremoto?">
+<meta property="og:description" content="1.073 colegios caídos o en riesgo de colapso y 201.833 estudiantes, tres meses después del terremoto. Busque su colegio en el mapa y pídale cuentas al Gobierno.">
+<meta property="og:image" content="https://clo-hub.github.io/Colegios-en-riesgo/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_CO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clo-hub.github.io/Colegios-en-riesgo/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -36,6 +48,7 @@ a{color:var(--fucsia-osc)}
 .oficina .l2{font-weight:600;font-size:.8rem;color:#E5E7EB;margin:1px 0 0}
 .oficina .l3{font-size:.7rem;color:#9CA3AF;margin:1px 0 0}
 .linea{height:5px;background:var(--fucsia)}
+.desc{margin:12px 0 0;font-size:.95rem}.desc .acts{display:inline-flex;margin:6px 0 0 6px;vertical-align:middle}
 .interpela{background:#0E1118;color:#fff;border-bottom:5px solid var(--fucsia)}
 .interpela .int{padding-top:20px;padding-bottom:20px}
 .interpela .ig{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center}
@@ -868,6 +881,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <h1>¿El colegio de sus hijos <span>sigue en riesgo</span> tres meses después del terremoto?</h1>
     <p>El Ministerio de Educación reconoce 5.738 sedes educativas afectadas por el terremoto del 10 de agosto de 2026. Busque la suya, mire en qué estado la clasificó el Ministerio y pídale cuentas.</p>
     <p class="exige">Exigimos al Ministerio de Educación que publique la lista, el cronograma de obra de cada colegio y los recursos asignados a cada institución.</p>
+    <div class="desc" id="desc"><b>Descargue el balance completo:</b> las 5.738 sedes con su nivel de afectación, por departamento y por municipio.
+      <span class="acts"><a class="btn sec" href="Balance_colegios_en_riesgo.xlsx" download>Descargar en Excel</a><a class="btn sec" href="Balance_colegios_en_riesgo.pdf" download>Descargar en PDF (192 páginas)</a></span></div>
   </div>
 
   <div class="tiles" id="tiles">
@@ -1085,6 +1100,7 @@ fetch("sedes.json").then(function(r){return r.json()}).then(function(A){
   }
 }).catch(function(){$("list").innerHTML='<p style="padding:14px;margin:0">No se pudieron cargar los datos. Recargue la página.</p>'});
 (function(){var p=$("puerta"),k="cer_acepto",ya=false;try{ya=sessionStorage.getItem(k)==="1"}catch(e){}
+  if(/claude/i.test(location.hostname)){var ds=$("desc");ds.querySelector(".acts").remove();ds.insertAdjacentHTML("beforeend"," <i>Las descargas están en la versión web.</i>")}
   var DD=Math.floor((Date.now()-new Date(2026,7,10).getTime())/864e5);$("idias").textContent=DD;
   var fuera=[$("cabeza"),$("interpela"),document.querySelector("main"),document.querySelector("footer")];
   function abrir(){p.remove();document.body.style.overflow="";fuera.forEach(function(x){if(x)x.inert=false});if(map)map.invalidateSize()}
